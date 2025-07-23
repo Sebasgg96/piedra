@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Antonio's Retro Birthday Game</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body {
+  font-family: 'Press Start 2P', monospace;
+  background: url('https://upload.wikimedia.org/wikipedia/commons/3/3f/Pinball_Backglass.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: #00ffcc;
+  text-align: center;
+  padding: 20px;
+}
+
+.level {
+  display: none;
+  margin: 20px auto;
+  padding: 20px;
+  border: 2px dashed #00ffcc;
+  width: 80%;
+  background-color: rgba(0, 0, 0, 0.8);
+  animation: fadeIn 1s ease-in-out;
+}
+
+.visible {
+  display: block;
+}
+
+input[type="text"] {
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #00ffcc;
+  background-color: #000;
+  color: #00ffcc;
+  width: 60%;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background: linear-gradient(45deg, #ff00cc, #3333ff);
+  border: none;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 0 10px #ff00cc;
+  transition: transform 0.2s;
+}
+
+button:hover {
+  transform: scale(1.1);
+}
+
+.gift {
+  font-size: 20px;
+  color: yellow;
+  margin-top: 10px;
+  animation: pulse 1s infinite;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+</style>
+</head>
+<body>
+<h1>🎉 Antonio's Retro Birthday Game 🎉</h1>
+<audio autoplay="" loop="">
+<source src="https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Komiku/Its_time_for_adventure/Komiku_-_03_-_Level_Up.mp3" type="audio/mpeg"/>
+    Your browser does not support the audio element.
+  </audio>
+<div id="game"></div>
+<script>
+    const puzzles = [
+      { question: "Level 1: What is the output of `print(2 ** 3)`?", answer: "8" },
+      { question: "Level 2: What keyword defines a function in Python?", answer: "def" },
+      { question: "Level 3: What does `len('hello')` return?", answer: "5" },
+      { question: "Level 4: What is the output of `console.log(typeof [])` in JavaScript?", answer: "object" },
+      { question: "Level 5: What symbol is used for comments in Python?", answer: "#" },
+      { question: "Level 6: What is the output of `'5' + '5'` in JavaScript?", answer: "55" },
+      { question: "Level 7: What command lists files in Unix?", answer: "ls" },
+      { question: "Level 8: What is the extension for a Bash script?", answer: ".sh" },
+      { question: "Level 9: What does JSON stand for?", answer: "javascript object notation" },
+      { question: "Level 10: What is the output of `print('A' * 3)`?", answer: "AAA" }
+    ];
+
+    const gameDiv = document.getElementById("game");
+
+    puzzles.forEach((puzzle, index) => {
+      const level = document.createElement("div");
+      level.className = "level";
+      level.id = "level" + index;
+      level.innerHTML = `
+        <h2>${puzzle.question}</h2>
+        <input type="text" id="input${index}" placeholder="Your answer" />
+        <button onclick="checkAnswer(${index})">Submit</button>
+        <div id="feedback${index}"></div>
+      `;
+      gameDiv.appendChild(level);
+    });
+
+    document.getElementById("level0").classList.add("visible");
+
+    function checkAnswer(index) {
+      const input = document.getElementById("input" + index).value.trim().toLowerCase();
+      const correct = puzzles[index].answer.toLowerCase();
+      const feedback = document.getElementById("feedback" + index);
+      if (input === correct) {
+        feedback.innerHTML = "<p>✅ Correct!</p>";
+        if (index === 2) feedback.innerHTML += "<p class='gift'>🎁 You've unlocked Gift #1!</p>";
+        if (index === 5) feedback.innerHTML += "<p class='gift'>🎁 You've unlocked Gift #2!</p>";
+        if (index === 9) feedback.innerHTML += "<p class='gift'>🎁 You've unlocked Gift #3!</p>";
+        if (index + 1 < puzzles.length) {
+          setTimeout(() => {
+            document.getElementById("level" + index).classList.remove("visible");
+            document.getElementById("level" + (index + 1)).classList.add("visible");
+          }, 1000);
+        }
+      } else {
+        feedback.innerHTML = "<p>❌ Try again!</p>";
+      }
+    }
+  </script>
+</body>
+</html>
